@@ -16,14 +16,14 @@ const HomePage = () => (
         <div className="flex h-full flex-col justify-between gap-5">
           <div className="flex flex-col gap-5">
             <div className="rounded-3xl border border-stone-200 bg-white px-7 py-6 text-3xl font-semibold leading-tight text-stone-900">
-              캐치프레이즈가<br />
-              들어갈 곳입니당
+              아 누가 제발<br />
+              저 좀 구원해주세요.....
             </div>
             <div className="rounded-2xl border border-stone-200 bg-stone-50 px-5 py-3 text-sm text-stone-600">
-              간단한 설명 문구가 들어갈 곳이에요
+              멀미나요 진짜...(간단한 설명 들어가는 부분)
             </div>
             <div className="rounded-2xl border border-stone-200 bg-stone-50 px-5 py-4 text-sm text-stone-600">
-              안내 및 주의사항이 들어갈 곳이에요
+              나 좀 꺼내줌메...(안내 및 주의사항)
             </div>
           </div>
           <div className="flex flex-wrap gap-4">
@@ -31,13 +31,13 @@ const HomePage = () => (
               href="/user"
               className="min-w-[180px] rounded-full bg-amber-200 px-6 py-3 text-center text-sm font-semibold text-stone-900 shadow-sm transition hover:-translate-y-0.5 hover:bg-amber-300"
             >
-              추천 시작하기
+              추천 시작하기는 망할 개나 줘버려
             </a>
             <a
               href="/product"
               className="min-w-[180px] rounded-full border border-stone-400 px-6 py-3 text-center text-sm font-semibold text-stone-900 transition hover:bg-stone-800 hover:text-white"
             >
-              전체 상품 조회하기
+              전체 상품 조회하기 하하하핳
             </a>
           </div>
         </div>
@@ -52,7 +52,7 @@ const HomePage = () => (
             개인정보처리방침
           </a>
           <a href="#" className="hover:text-stone-900">
-            고객센터
+            고객센터 엘지유플러스인데요~ 불났다고??
           </a>
         </div>
         <p>

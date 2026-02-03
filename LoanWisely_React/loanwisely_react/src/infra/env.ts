@@ -37,8 +37,6 @@ const numberFromEnv = (key: string, fallback: number): number => {
 
 export const env = {
   nodeEnv: normalizeNodeEnv(process.env.NODE_ENV),
-  recommendApiBaseUrl: optional("RECOMMEND_API_BASE_URL"),
-  userApiUrl: optional("USER_API_URL"),
-  consentApiBaseUrl: optional("CONSENT_API_BASE_URL"),
+  backendUrl: optional("BACKEND_URL"),
   requestTimeoutMs: numberFromEnv("REQUEST_TIMEOUT_MS", 10000),
 };

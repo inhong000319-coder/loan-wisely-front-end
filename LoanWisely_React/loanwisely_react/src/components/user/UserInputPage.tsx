@@ -5,9 +5,10 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 
 import AppHeader from "@/components/common/AppHeader";
+import LoadingOverlay from "@/components/common/LoadingOverlay";
 
-import { useUserInputSubmit } from "@/hooks/useUserInputSubmit";
-import type { UserInputPayload } from "@/types/user";
+import { useRecommendFlow } from "@/hooks/useRecommendFlow";
+import type { UserInputPayload, UserInputLv2, UserInputLv3 } from "@/types/user";
 
 type Level = 1 | 2 | 3;
 
@@ -18,28 +19,28 @@ type LevelMeta = {
 
 type FormValues = {
   age: number | null;
-  annualIncome: number | null;
+  incomeYear: number | null;
   gender: "male" | "female" | "";
-  employmentStatus: string;
+  employmentType: string;
   residenceType: string;
   loanPurpose: string;
-  totalDebtAmount: number | null;
-  loanCount: number | null;
+  totalDebt: number | null;
+  existingLoanCount: number | null;
   consent: boolean;
 };
 
 const levelMeta: Record<Level, LevelMeta> = {
   1: {
     title: "Lv.1 필수 정보",
-    description: "기본 개인정보를 입력합니다.",
+    description: "나이, 연소득, 성별을 입력합니다.",
   },
   2: {
     title: "Lv.2 선택 정보",
-    description: "선택 정보를 입력합니다.",
+    description: "고용 형태와 거주 형태를 입력합니다.",
   },
   3: {
     title: "Lv.3 추가 정보",
-    description: "추가 정보 입력 및 동의를 진행합니다.",
+    description: "대출 목적과 부채 정보를 입력합니다.",
   },
 };
 
@@ -49,23 +50,23 @@ const emptyToNull = (value: string): string | null =>
 const UserInputPage = () => {
   const [level, setLevel] = useState<Level>(1);
   const router = useRouter();
-  const { mutate } = useUserInputSubmit();
+  const recommendFlow = useRecommendFlow();
 
   const { register, getValues } = useForm<FormValues>({
     defaultValues: {
       age: null,
-      annualIncome: null,
+      incomeYear: null,
       gender: "",
-      employmentStatus: "",
+      employmentType: "",
       residenceType: "",
       loanPurpose: "",
-      totalDebtAmount: null,
-      loanCount: null,
+      totalDebt: null,
+      existingLoanCount: null,
       consent: false,
     },
   });
 
-  const goNext = () => {
+  const goNext = async () => {
     if (level === 1) {
       setLevel(2);
       return;
@@ -79,26 +80,27 @@ const UserInputPage = () => {
     const payload: UserInputPayload = {
       lv1: {
         age: values.age ?? null,
-        annualIncome: values.annualIncome ?? null,
+        incomeYear: values.incomeYear ?? null,
         gender: values.gender === "" ? null : values.gender,
       },
       lv2: {
-        employmentStatus: emptyToNull(values.employmentStatus),
+        employmentType: emptyToNull(values.employmentType),
         residenceType: emptyToNull(values.residenceType),
       },
       lv3: {
         loanPurpose: emptyToNull(values.loanPurpose),
-        totalDebtAmount: values.totalDebtAmount ?? null,
-        loanCount: values.loanCount ?? null,
+        totalDebt: values.totalDebt ?? null,
+        existingLoanCount: values.existingLoanCount ?? null,
         consent: values.consent,
       },
     };
 
-    mutate(payload, {
-      onSettled: () => {
-        router.push("/recommend");
-      },
-    });
+    try {
+      const recommendResponse = await recommendFlow.mutateAsync(payload);
+      router.push(`/recommend?id=${recommendResponse.recommendationId}`);
+    } catch {
+      router.push("/recommend");
+    }
   };
 
   const goBack = () => {
@@ -113,6 +115,11 @@ const UserInputPage = () => {
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-stone-100 via-stone-100 to-amber-50 px-16 py-14">
+      <LoadingOverlay
+        visible={recommendFlow.isPending}
+        title="추천 결과 생성 중"
+        message="조건 확인 → 상품 매칭 → 상환 계산"
+      />
       <div className="mx-auto flex w-full max-w-7xl flex-col gap-9">
         <AppHeader />
 
@@ -179,7 +186,7 @@ const UserInputPage = () => {
                       type="number"
                       placeholder="연소득을 입력하세요"
                       className="rounded-2xl border border-stone-300 px-4 py-2"
-                      {...register("annualIncome", { valueAsNumber: true })}
+                      {...register("incomeYear", { valueAsNumber: true })}
                     />
                   </label>
                   <div className="grid gap-2 text-sm text-stone-700">
@@ -212,7 +219,7 @@ const UserInputPage = () => {
                     고용 형태
                     <select
                       className="rounded-2xl border border-stone-300 px-4 py-2"
-                      {...register("employmentStatus")}
+                      {...register("employmentType")}
                     >
                       <option value="">선택하세요</option>
                       <option value="fulltime">정규직</option>
@@ -250,21 +257,21 @@ const UserInputPage = () => {
                     </select>
                   </label>
                   <label className="grid gap-2 text-sm text-stone-700">
-                    총부채 금액
+                    총 부채
                     <input
                       type="number"
-                      placeholder="총부채 금액을 입력하세요"
+                      placeholder="총 부채 금액을 입력하세요"
                       className="rounded-2xl border border-stone-300 px-4 py-2"
-                      {...register("totalDebtAmount", { valueAsNumber: true })}
+                      {...register("totalDebt", { valueAsNumber: true })}
                     />
                   </label>
                   <label className="grid gap-2 text-sm text-stone-700">
-                    기존 대출 수
+                    기존 대출 건수
                     <input
                       type="number"
-                      placeholder="기존 대출 수를 입력하세요"
+                      placeholder="기존 대출 건수를 입력하세요"
                       className="rounded-2xl border border-stone-300 px-4 py-2"
-                      {...register("loanCount", { valueAsNumber: true })}
+                      {...register("existingLoanCount", { valueAsNumber: true })}
                     />
                   </label>
                   <label className="flex items-center gap-2 text-sm text-stone-700">
@@ -279,7 +286,7 @@ const UserInputPage = () => {
               <button
                 type="button"
                 onClick={goBack}
-                disabled={level === 1}
+                disabled={level === 1 || recommendFlow.isPending}
                 className={`rounded-full border px-6 py-2 text-sm ${
                   level === 1
                     ? "border-stone-200 text-stone-300"
@@ -291,7 +298,8 @@ const UserInputPage = () => {
               <button
                 type="button"
                 onClick={goNext}
-                className="rounded-full bg-amber-200 px-6 py-2 text-sm font-semibold text-stone-900"
+                disabled={recommendFlow.isPending}
+                className="rounded-full bg-amber-200 px-6 py-2 text-sm font-semibold text-stone-900 disabled:opacity-60"
               >
                 {level === 3 ? "추천 결과 보기" : "다음으로"}
               </button>
@@ -334,4 +342,3 @@ const UserInputPage = () => {
 };
 
 export default UserInputPage;
-
