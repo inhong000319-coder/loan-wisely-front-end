@@ -28,3 +28,37 @@ export type RecommendResultResponse = {
   products: RecommendProduct[];
   detail: RecommendDetail | null;
 };
+
+export type RecommendExplainResponse = {
+  summary: string;
+  levelUsed: "LV1" | "LV2" | "LV3";
+  levelStatus: LvUsageStatus;
+  reasons: string[];
+  riskNotes: string[];
+};
+
+export type RecommendExecuteRequest = {
+  versionIds: {
+    profileVersionId?: string;
+    lv2VersionId?: string;
+    lv3VersionId?: string;
+  };
+  options?: Record<string, unknown>;
+};
+
+export type RecommendExecuteResponse = {
+  recommendationId: string;
+};
+
+export type RecommendationListItem = {
+  id: string;
+  title: string;
+  createdAt: string;
+};
+
+export type RecommendationListResponse = {
+  items: RecommendationListItem[];
+  page: number;
+  size: number;
+  total: number;
+};
