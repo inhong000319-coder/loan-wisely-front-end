@@ -1,7 +1,7 @@
 ﻿"use client";
 // Recommendation result UI.
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 
 import AppHeader from "@/components/common/AppHeader";
@@ -34,7 +34,16 @@ const RecommendResultPage = () => {
   const searchParams = useSearchParams();
   const recommendationId = searchParams.get("id");
   const { data, isLoading } = useRecommendResult(recommendationId);
-  const { data: listData } = useRecommendationList();
+  const [accessToken, setAccessToken] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (typeof window === "undefined") {
+      return;
+    }
+    setAccessToken(window.localStorage.getItem("accessToken"));
+  }, []);
+
+  const { data: listData } = useRecommendationList(0, 10, Boolean(accessToken));
   const { data: explainData } = useRecommendationExplain(recommendationId);
 
   const explain = explainData ?? data?.explain ?? {

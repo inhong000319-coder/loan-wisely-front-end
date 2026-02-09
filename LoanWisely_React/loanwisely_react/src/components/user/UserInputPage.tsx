@@ -33,12 +33,12 @@ const UserInputPage = () => {
   const { register, getValues } = useForm<FormValues>({
     defaultValues: {
       age: null,
-      incomeYear: null,
+      annualIncome: null,
       gender: "",
       employmentType: "",
       residenceType: "",
       loanPurpose: "",
-      totalDebt: null,
+      totalDebtAmount: null,
       existingLoanCount: null,
       consent: false,
     },
@@ -58,7 +58,7 @@ const UserInputPage = () => {
     const payload: UserInputPayload = {
       lv1: {
         age: values.age ?? null,
-        incomeYear: values.incomeYear ?? null,
+        annualIncome: values.annualIncome ?? null,
         gender: values.gender === "" ? null : values.gender,
       },
       lv2: {
@@ -67,7 +67,7 @@ const UserInputPage = () => {
       },
       lv3: {
         loanPurpose: emptyToNull(values.loanPurpose),
-        totalDebt: values.totalDebt ?? null,
+        totalDebtAmount: values.totalDebtAmount ?? null,
         existingLoanCount: values.existingLoanCount ?? null,
         consent: values.consent,
       },

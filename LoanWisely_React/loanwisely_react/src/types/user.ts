@@ -6,7 +6,7 @@ export type UserProfileResponse = {
 
 export type UserInputLv1 = {
   age: number | null;
-  incomeYear: number | null;
+  annualIncome: number | null;
   gender: "male" | "female" | null;
 };
 
@@ -17,7 +17,7 @@ export type UserInputLv2 = {
 
 export type UserInputLv3 = {
   loanPurpose: string | null;
-  totalDebt: number | null;
+  totalDebtAmount: number | null;
   existingLoanCount: number | null;
   consent: boolean;
 };
@@ -61,7 +61,7 @@ export type UserCreditLv3Payload = Omit<UserInputLv3, "consent">;
 
 export type UserProfilePayload = {
   age: number | null;
-  incomeYear: number | null;
+  annualIncome: number | null;
   gender: "male" | "female" | null;
 };
 

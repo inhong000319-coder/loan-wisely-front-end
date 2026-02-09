@@ -30,13 +30,13 @@ const hasLv2Input = (payload: UserInputLv2): boolean =>
 
 const hasLv3Input = (payload: UserInputLv3): boolean =>
   hasValue(payload.loanPurpose ?? null) ||
-  hasValue(payload.totalDebt ?? null) ||
+  hasValue(payload.totalDebtAmount ?? null) ||
   hasValue(payload.existingLoanCount ?? null);
 
 const buildPayload = (values: UserInputPayload): UserInputPayload => ({
   lv1: {
     age: values.lv1.age ?? null,
-    incomeYear: values.lv1.incomeYear ?? null,
+    annualIncome: values.lv1.annualIncome ?? null,
     gender: values.lv1.gender ?? null,
   },
   lv2: {
@@ -45,7 +45,7 @@ const buildPayload = (values: UserInputPayload): UserInputPayload => ({
   },
   lv3: {
     loanPurpose: emptyToNull(values.lv3.loanPurpose ?? ""),
-    totalDebt: values.lv3.totalDebt ?? null,
+    totalDebtAmount: values.lv3.totalDebtAmount ?? null,
     existingLoanCount: values.lv3.existingLoanCount ?? null,
     consent: values.lv3.consent,
   },
@@ -88,7 +88,7 @@ export const useRecommendFlow = () =>
       if (hasLv3) {
         const lv3Payload: UserCreditLv3Payload = {
           loanPurpose: payload.lv3.loanPurpose,
-          totalDebt: payload.lv3.totalDebt,
+          totalDebtAmount: payload.lv3.totalDebtAmount,
           existingLoanCount: payload.lv3.existingLoanCount,
         };
         const lv3Response = await saveUserCreditLv3({
