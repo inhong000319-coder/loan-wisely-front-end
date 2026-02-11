@@ -5,7 +5,7 @@ import type {
   RecommendExecuteRequest,
   RecommendExecuteResponse,
   RecommendExplainResponse,
-  RecommendResultResponse,
+  RecommendResponse,
   RecommendationListResponse,
 } from "@/types/recommend";
 import type { ApiResponse } from "@/types/common";
@@ -13,20 +13,18 @@ import type { ApiResponse } from "@/types/common";
 export const executeRecommendation = async (
   payload: RecommendExecuteRequest,
 ): Promise<RecommendExecuteResponse> =>
-  fetcher<ApiResponse<{ recommendationId?: string }>>("/api/recommendations", {
+  fetcher<ApiResponse<RecommendExecuteResponse>>("/api/recommendations", {
     method: "POST",
     headers: {
       "content-type": "application/json",
     },
     body: JSON.stringify(payload),
-  }).then((data) => ({
-    recommendationId: data.data?.recommendationId ?? "",
-  }));
+  }).then((data) => data.data);
 
 export const fetchRecommendationDetail = async (
   recommendationId: string,
-): Promise<RecommendResultResponse> =>
-  fetcher<ApiResponse<RecommendResultResponse>>(
+): Promise<RecommendResponse> =>
+  fetcher<ApiResponse<RecommendResponse>>(
     `/api/recommendations/${encodeURIComponent(recommendationId)}`,
     { method: "GET" },
   ).then((data) => data.data);

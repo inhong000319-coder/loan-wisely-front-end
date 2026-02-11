@@ -1,49 +1,36 @@
 ﻿// Recommendation API types.
 export type LvUsageStatus = "full" | "partial" | "empty";
 
-export type RecommendExplain = {
-  summary: string;
-  levelUsed: "LV1" | "LV2" | "LV3";
-  levelStatus: LvUsageStatus;
+export type RecommendItemResponse = {
+  productId: number;
+  score?: number | null;
+  minRate?: number | null;
+  briefReason?: string | null;
 };
 
-export type RecommendProduct = {
-  id: string;
-  lenderName: string;
-  productName: string;
-  rate: string;
-  limit: string;
-  reason: string;
-  suitabilityScore: number;
-  riskNote: string;
-  estimationDetails?: RecommendEstimationDetail[];
+export type RecommendResponse = {
+  state: "READY" | "NOT_READY" | "BLOCKED";
+  inputLevel?: number | null;
+  items: RecommendItemResponse[];
+  warnings?: Record<string, unknown> | null;
 };
 
-export type RecommendEstimationDetail = {
+export type ExplainFactor = {
   factorCode: string;
   factorName: string;
-  factorValue: string;
-  contribution?: string | null;
+  factorValue: string | number;
 };
 
-export type RecommendDetail = {
-  description: string;
-  monthlyPaymentExample: string;
-  riskWarning: string;
-};
-
-export type RecommendResultResponse = {
-  explain: RecommendExplain;
-  products: RecommendProduct[];
-  detail: RecommendDetail | null;
+export type RecommendExplainItem = {
+  productId: number;
+  score?: number | null;
+  minRate?: number | null;
+  factors: ExplainFactor[];
 };
 
 export type RecommendExplainResponse = {
-  summary: string;
-  levelUsed: "LV1" | "LV2" | "LV3";
-  levelStatus: LvUsageStatus;
-  reasons: string[];
-  riskNotes: string[];
+  inputLevel: number | null;
+  items: RecommendExplainItem[];
 };
 
 export type RecommendExecuteRequest = {
@@ -56,7 +43,10 @@ export type RecommendExecuteRequest = {
 };
 
 export type RecommendExecuteResponse = {
-  recommendationId: string;
+  state: "READY" | "NOT_READY" | "BLOCKED";
+  inputLevel?: number | null;
+  items: RecommendItemResponse[];
+  warnings?: Record<string, unknown> | null;
 };
 
 export type RecommendationListItem = {

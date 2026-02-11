@@ -1,5 +1,5 @@
 ﻿"use client";
-// Recommendation result UI.
+// 추천 결과 화면
 
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
@@ -23,15 +23,15 @@ const splitSummary = (summary: string): string[] => {
   if (parts.length >= 3) {
     return parts.slice(0, 3);
   }
-  return [
-    summary || "입력 조건을 바탕으로 추천을 구성했습니다.",
-    "상환 여력을 고려한 상품을 우선 정렬했습니다.",
-    "리스크 항목을 함께 확인해 주세요.",
-  ];
+  if (parts.length > 0) {
+    return parts;
+  }
+  return ["요약 데이터가 없습니다."];
 };
 
 const RecommendResultPage = () => {
   const [showAllProducts, setShowAllProducts] = useState(false);
+  const [activeVersion, setActiveVersion] = useState<number | null>(null);
   const searchParams = useSearchParams();
   const recommendationId = searchParams.get("id");
   const { data, isLoading } = useRecommendResult(recommendationId);
@@ -44,75 +44,70 @@ const RecommendResultPage = () => {
     setAccessToken(getAccessToken());
   }, []);
 
+  useEffect(() => {
+    if (typeof window === "undefined") {
+      return;
+    }
+    const loadActiveVersion = async () => {
+      try {
+        const response = await fetch("/api/metadata/credit-dictionary/versions/active");
+        if (!response.ok) {
+          return;
+        }
+        const payload = await response.json();
+        const versionValue = payload?.data?.activeVersion;
+        if (typeof versionValue === "number") {
+          setActiveVersion(versionValue);
+        }
+      } catch {
+        return;
+      }
+    };
+    loadActiveVersion();
+  }, []);
+
   const { data: listData } = useRecommendationList(0, 10, Boolean(accessToken));
   const { data: explainData } = useRecommendationExplain(recommendationId);
 
-  const explain = explainData ?? data?.explain ?? {
-    summary: "추천에 사용된 입력 요약이 표시됩니다.",
-    levelUsed: "LV1",
-    levelStatus: "empty",
-  };
-  const reasons = explainData?.reasons ?? [];
-  const riskNotes = explainData?.riskNotes ?? [];
+  const levelUsedValue = explainData?.inputLevel ?? data?.inputLevel ?? null;
+  const levelUsed = levelUsedValue ? `LV${levelUsedValue}` : "LV1";
+  const levelStatus =
+    data?.state === "READY" ? "full" : data?.state === "BLOCKED" ? "partial" : "empty";
+  const summaryText =
+    data?.state === "READY"
+      ? "추천 결과를 표시합니다."
+      : data?.state === "BLOCKED"
+        ? "추천 결과가 차단되었습니다."
+        : "추천 결과가 준비되지 않았습니다.";
+  const summaryItems = splitSummary(summaryText);
+  if (activeVersion !== null) {
+    summaryItems.push(`활성 메타 버전: ${activeVersion}`);
+  }
 
-  const products = data?.products ?? [
-    {
-      id: "demo-1",
-      lenderName: "대출사명",
-      productName: "대출 상품명",
-      rate: "금리 월 6.2%",
-      limit: "최대 한도 500만원",
-      reason: "추천 사유가 표시됩니다.",
-      suitabilityScore: 78,
-      riskNote: "주의사항이 표시됩니다.",
-    },
-    {
-      id: "demo-2",
-      lenderName: "대출사명",
-      productName: "대출 상품명",
-      rate: "금리 월 6.2%",
-      limit: "최대 한도 500만원",
-      reason: "추천 사유가 표시됩니다.",
-      suitabilityScore: 72,
-      riskNote: "주의사항이 표시됩니다.",
-    },
-    {
-      id: "demo-3",
-      lenderName: "대출사명",
-      productName: "대출 상품명",
-      rate: "금리 월 6.0%",
-      limit: "최대 한도 700만원",
-      reason: "추천 사유가 표시됩니다.",
-      suitabilityScore: 69,
-      riskNote: "주의사항이 표시됩니다.",
-    },
-    {
-      id: "demo-4",
-      lenderName: "대출사명",
-      productName: "대출 상품명",
-      rate: "금리 월 5.9%",
-      limit: "최대 한도 900만원",
-      reason: "추천 사유가 표시됩니다.",
-      suitabilityScore: 65,
-      riskNote: "주의사항이 표시됩니다.",
-    },
-    {
-      id: "demo-5",
-      lenderName: "대출사명",
-      productName: "대출 상품명",
-      rate: "금리 월 6.4%",
-      limit: "최대 한도 300만원",
-      reason: "추천 사유가 표시됩니다.",
-      suitabilityScore: 61,
-      riskNote: "주의사항이 표시됩니다.",
-    },
-  ];
+  const explainItems = explainData?.items ?? [];
+  const explainByProductId = new Map(explainItems.map((item) => [item.productId, item]));
 
-  const detail = data?.detail ?? {
-    description: "상품 상세 정보가 표시됩니다.",
-    monthlyPaymentExample: "월 상환액 예시가 표시됩니다.",
-    riskWarning: "고위험 조건 경고 및 승인 보장 아님 고지가 표시됩니다.",
-  };
+  const items = data?.items ?? [];
+  const products = items.map((item) => {
+    const explainItem = explainByProductId.get(item.productId);
+    const factors = explainItem?.factors ?? [];
+    return {
+      id: String(item.productId),
+      lenderName: "기관 정보 미제공",
+      productName: `상품 ${item.productId}`,
+      rate: item.minRate !== null && item.minRate !== undefined ? `최소 금리 ${item.minRate}` : "금리 정보 미제공",
+      limit: "한도 정보 미제공",
+      reason: item.briefReason ?? "추천 사유 정보 미제공",
+      suitabilityScore: item.score ?? 0,
+      riskNote: "",
+      estimationDetails: factors.map((factor) => ({
+        factorCode: factor.factorCode,
+        factorName: factor.factorName,
+        factorValue: String(factor.factorValue),
+      })),
+    };
+  });
+  const hasProducts = products.length > 0;
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-stone-100 via-stone-100 to-amber-50 px-16 py-14">
@@ -125,21 +120,32 @@ const RecommendResultPage = () => {
           <RecommendationListSection items={listData?.items ?? []} />
 
           <SummarySection
-            summaryItems={splitSummary(explain.summary)}
-            levelUsed={explain.levelUsed}
-            levelStatus={explain.levelStatus}
+            summaryItems={summaryItems}
+            levelUsed={levelUsed}
+            levelStatus={levelStatus}
           />
 
-          <SimulationSection monthlyPaymentExample={detail.monthlyPaymentExample} />
-
-          <ProductGridSection
-            products={products}
-            fallbackTags={reasons}
-            showAll={showAllProducts}
-            onShowAll={() => setShowAllProducts(true)}
+          <SimulationSection
+            monthlyPaymentExample="상환 시뮬레이션 정보가 없습니다."
           />
 
-          <RiskSection riskNotes={riskNotes} fallbackNote={detail.riskWarning} />
+          {hasProducts ? (
+            <ProductGridSection
+              products={products}
+              fallbackTags={[]}
+              showAll={showAllProducts}
+              onShowAll={() => setShowAllProducts(true)}
+            />
+          ) : (
+            <div className="rounded-3xl border border-stone-200 bg-white px-6 py-6 text-sm text-stone-500">
+              추천 가능한 상품이 없습니다.
+            </div>
+          )}
+
+          <RiskSection
+            riskNotes={[]}
+            fallbackNote="리스크 정보가 없습니다."
+          />
 
           <ActionSection />
         </section>
@@ -149,3 +155,4 @@ const RecommendResultPage = () => {
 };
 
 export default RecommendResultPage;
+

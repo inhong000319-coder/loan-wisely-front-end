@@ -1,4 +1,4 @@
-// Recommendation detail proxy.
+﻿// 추천 상세 조회를 위한 BFF 프록시.
 import { NextResponse } from "next/server";
 
 import { env } from "@/infra/env";
@@ -29,16 +29,15 @@ const respond = (body: unknown, status: number): NextResponse => {
   return NextResponse.json(body, { status });
 };
 
-const mockResponse = (): NextResponse =>
-  NextResponse.json({
-    explain: { summary: "", levelUsed: "LV1", levelStatus: "empty" },
-    products: [],
-    detail: null,
-  });
+const backendNotConfiguredResponse = (): NextResponse =>
+  NextResponse.json(
+    { message: "BACKEND_URL is not configured." },
+    { status: 500 },
+  );
 
 export const GET = async (request: Request): Promise<NextResponse> => {
   if (env.backendUrl === "") {
-    return mockResponse();
+    return backendNotConfiguredResponse();
   }
 
   const targetUrl = buildTargetUrl(request.url);
@@ -57,3 +56,6 @@ export const GET = async (request: Request): Promise<NextResponse> => {
     return respond({ message: "Proxy request failed." }, 502);
   }
 };
+
+
+

@@ -29,18 +29,15 @@ const respond = (body: unknown, status: number): NextResponse => {
   return NextResponse.json(body, { status });
 };
 
-const mockResponse = (): NextResponse =>
-  NextResponse.json({
-    summary: "",
-    levelUsed: "LV1",
-    levelStatus: "empty",
-    reasons: [],
-    riskNotes: [],
-  });
+const backendNotConfiguredResponse = (): NextResponse =>
+  NextResponse.json(
+    { message: "BACKEND_URL is not configured." },
+    { status: 500 },
+  );
 
 export const GET = async (request: Request): Promise<NextResponse> => {
   if (env.backendUrl === "") {
-    return mockResponse();
+    return backendNotConfiguredResponse();
   }
 
   const targetUrl = buildTargetUrl(request.url);

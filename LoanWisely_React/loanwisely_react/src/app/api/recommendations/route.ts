@@ -10,8 +10,11 @@ const buildTargetUrl = (requestUrl: string): string => {
   return `${base}${incoming.pathname}${incoming.search}`;
 };
 
-const mockResponse = (): NextResponse =>
-  NextResponse.json({ recommendationId: "demo-reco" });
+const backendNotConfiguredResponse = (): NextResponse =>
+  NextResponse.json(
+    { message: "BACKEND_URL is not configured." },
+    { status: 500 },
+  );
 
 const forwardHeaders = (request: Request): HeadersInit => {
   const headers = new Headers();
@@ -40,7 +43,7 @@ const respond = (body: unknown, status: number): NextResponse => {
 
 export const POST = async (request: Request): Promise<NextResponse> => {
   if (env.backendUrl === "") {
-    return mockResponse();
+    return backendNotConfiguredResponse();
   }
 
   const targetUrl = buildTargetUrl(request.url);
@@ -61,5 +64,6 @@ export const POST = async (request: Request): Promise<NextResponse> => {
     return respond({ message: "Proxy request failed." }, 502);
   }
 };
+
 
 
