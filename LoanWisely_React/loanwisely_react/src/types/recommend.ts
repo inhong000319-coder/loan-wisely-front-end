@@ -63,6 +63,12 @@ export type RecommendationListItem = {
   id: string;
   title: string;
   createdAt: string;
+  products: {
+    productName: string;
+    rate: string;
+    limit: string;
+    repaymentMethod: string;
+  }[];
 };
 
 export type RecommendationListResponse = {

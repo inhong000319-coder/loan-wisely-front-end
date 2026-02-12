@@ -32,6 +32,8 @@ const splitSummary = (summary: string): string[] => {
 
 const RecommendResultPage = () => {
   const [showAllProducts, setShowAllProducts] = useState(false);
+  const [listPage, setListPage] = useState(0);
+  const listSize = 5;
   const searchParams = useSearchParams();
   const recommendationId = searchParams.get("id");
   const { data, isLoading } = useRecommendResult(recommendationId);
@@ -44,7 +46,7 @@ const RecommendResultPage = () => {
     setAccessToken(getAccessToken());
   }, []);
 
-  const { data: listData } = useRecommendationList(0, 10, Boolean(accessToken));
+  const { data: listData } = useRecommendationList(listPage, listSize, Boolean(accessToken));
   const { data: explainData } = useRecommendationExplain(recommendationId);
 
   const explain = explainData ?? data?.explain ?? {
@@ -122,7 +124,13 @@ const RecommendResultPage = () => {
         <section className="flex flex-col gap-6 rounded-[32px] border border-stone-200 bg-white/90 p-8 shadow-soft-lg">
           <RecommendHeroSection hasId={Boolean(recommendationId)} isLoading={isLoading} />
 
-          <RecommendationListSection items={listData?.items ?? []} />
+          <RecommendationListSection
+            items={listData?.items ?? []}
+            page={listData?.page ?? listPage}
+            size={listData?.size ?? listSize}
+            total={listData?.total ?? 0}
+            onPageChange={setListPage}
+          />
 
           <SummarySection
             summaryItems={splitSummary(explain.summary)}
