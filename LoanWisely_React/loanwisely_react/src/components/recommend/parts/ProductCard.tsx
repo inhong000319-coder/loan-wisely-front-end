@@ -14,6 +14,7 @@ export type ProductCardProps = {
     factorValue: string;
     contribution?: string | null;
   }[];
+  onDetailClick?: (productId: string) => void;
 };
 
 const ProductCard = ({
@@ -26,6 +27,7 @@ const ProductCard = ({
   suitabilityScore,
   tags,
   estimationDetails = [],
+  onDetailClick,
 }: ProductCardProps) => (
   <article className="rounded-3xl border border-stone-200 bg-white px-6 py-5 shadow-sm">
     <div className="flex items-start justify-between gap-6">
@@ -37,6 +39,7 @@ const ProductCard = ({
       </div>
       <button
         type="button"
+        onClick={() => onDetailClick?.(id)}
         className="h-10 rounded-full border border-stone-400 px-4 text-sm font-semibold text-stone-700"
       >
         상세 보기

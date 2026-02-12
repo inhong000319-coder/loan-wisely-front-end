@@ -2,9 +2,14 @@
 type RecommendHeroSectionProps = {
   hasId: boolean;
   isLoading: boolean;
+  errorMessage?: string | null;
 };
 
-const RecommendHeroSection = ({ hasId, isLoading }: RecommendHeroSectionProps) => (
+const RecommendHeroSection = ({
+  hasId,
+  isLoading,
+  errorMessage,
+}: RecommendHeroSectionProps) => (
   <div className="flex flex-col gap-6">
     <div>
       <h1 className="text-3xl font-semibold text-stone-900">맞춤 추천 결과</h1>
@@ -22,6 +27,12 @@ const RecommendHeroSection = ({ hasId, isLoading }: RecommendHeroSectionProps) =
     {isLoading && hasId && (
       <div className="rounded-3xl border border-stone-200 bg-stone-50 px-6 py-5 text-sm text-stone-600">
         추천 결과를 불러오는 중입니다.
+      </div>
+    )}
+
+    {!isLoading && hasId && errorMessage && (
+      <div className="rounded-3xl border border-rose-200 bg-rose-50 px-6 py-5 text-sm text-rose-700">
+        {errorMessage}
       </div>
     )}
   </div>

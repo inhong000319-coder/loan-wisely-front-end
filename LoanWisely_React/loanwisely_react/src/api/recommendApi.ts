@@ -5,6 +5,8 @@ import type {
   RecommendExecuteRequest,
   RecommendExecuteResponse,
   RecommendExplainResponse,
+  RecommendEventRequest,
+  RecommendEventResponse,
   RecommendResponse,
   RecommendationListResponse,
 } from "@/types/recommend";
@@ -45,6 +47,17 @@ export const fetchRecommendationList = async (
     `/api/users/me/recommendations?page=${page}&size=${size}`,
     { method: "GET" },
   ).then((data) => data.data);
+
+export const postRecommendationEvent = async (
+  payload: RecommendEventRequest,
+): Promise<RecommendEventResponse> =>
+  fetcher<ApiResponse<RecommendEventResponse>>("/api/events/recommendations", {
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+    },
+    body: JSON.stringify(payload),
+  }).then((data) => data.data);
 
 
 

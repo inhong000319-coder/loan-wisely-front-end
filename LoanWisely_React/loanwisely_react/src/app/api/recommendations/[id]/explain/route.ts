@@ -1,4 +1,4 @@
-// Recommendation explain proxy.
+// 추천 설명 조회를 위한 BFF 프록시.
 import { NextResponse } from "next/server";
 
 import { env } from "@/infra/env";
@@ -15,6 +15,9 @@ const forwardHeaders = (request: Request): HeadersInit => {
   const authorization = request.headers.get("authorization");
   if (authorization) {
     headers.set("authorization", authorization);
+  }
+  if (env.backendApiKey) {
+    headers.set("X-API-KEY", env.backendApiKey);
   }
   return headers;
 };

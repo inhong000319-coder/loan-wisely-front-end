@@ -1,4 +1,3 @@
-﻿// 추천 상세 조회를 위한 BFF 프록시.
 import { NextResponse } from "next/server";
 
 import { env } from "@/infra/env";
@@ -12,7 +11,12 @@ const buildTargetUrl = (requestUrl: string): string => {
 
 const forwardHeaders = (request: Request): HeadersInit => {
   const headers = new Headers();
+  const contentType = request.headers.get("content-type");
   const authorization = request.headers.get("authorization");
+
+  if (contentType) {
+    headers.set("content-type", contentType);
+  }
   if (authorization) {
     headers.set("authorization", authorization);
   }
@@ -32,24 +36,20 @@ const respond = (body: unknown, status: number): NextResponse => {
   return NextResponse.json(body, { status });
 };
 
-const backendNotConfiguredResponse = (): NextResponse =>
-  NextResponse.json(
-    { message: "BACKEND_URL is not configured." },
-    { status: 500 },
-  );
-
-export const GET = async (request: Request): Promise<NextResponse> => {
+export const POST = async (request: Request): Promise<NextResponse> => {
   if (env.backendUrl === "") {
-    return backendNotConfiguredResponse();
+    return NextResponse.json({ message: "BACKEND_URL is not configured." }, { status: 500 });
   }
 
   const targetUrl = buildTargetUrl(request.url);
   const headers = forwardHeaders(request);
+  const body = await request.text();
 
   try {
     const data = await fetcher<unknown>(targetUrl, {
-      method: "GET",
+      method: "POST",
       headers,
+      body,
     });
     return respond(data, 200);
   } catch (error) {
@@ -59,6 +59,3 @@ export const GET = async (request: Request): Promise<NextResponse> => {
     return respond({ message: "Proxy request failed." }, 502);
   }
 };
-
-
-

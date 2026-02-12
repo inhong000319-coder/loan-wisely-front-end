@@ -27,6 +27,9 @@ const forwardHeaders = (request: Request): HeadersInit => {
   if (authorization) {
     headers.set("authorization", authorization);
   }
+  if (env.backendApiKey) {
+    headers.set("X-API-KEY", env.backendApiKey);
+  }
 
   return headers;
 };

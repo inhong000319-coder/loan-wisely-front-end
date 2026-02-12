@@ -1,4 +1,3 @@
-// Recommendation list proxy.
 import { NextResponse } from "next/server";
 
 import { env } from "@/infra/env";
@@ -10,12 +9,22 @@ const buildTargetUrl = (requestUrl: string): string => {
   return `${base}${incoming.pathname}${incoming.search}`;
 };
 
+const resolveUserId = (requestUrl: string): string => {
+  const incoming = new URL(requestUrl);
+  return incoming.searchParams.get("userId") ?? "1";
+};
+
 const forwardHeaders = (request: Request): HeadersInit => {
   const headers = new Headers();
   const authorization = request.headers.get("authorization");
+
   if (authorization) {
     headers.set("authorization", authorization);
   }
+  if (env.backendApiKey) {
+    headers.set("X-API-KEY", env.backendApiKey);
+  }
+  headers.set("X-USER-ID", resolveUserId(request.url));
   return headers;
 };
 
@@ -29,12 +38,14 @@ const respond = (body: unknown, status: number): NextResponse => {
   return NextResponse.json(body, { status });
 };
 
-const mockResponse = (): NextResponse =>
-  NextResponse.json({ items: [], page: 0, size: 10, total: 0 });
-
 export const GET = async (request: Request): Promise<NextResponse> => {
   if (env.backendUrl === "") {
-    return mockResponse();
+    return NextResponse.json({
+      items: [],
+      page: 0,
+      size: 10,
+      total: 0,
+    });
   }
 
   const targetUrl = buildTargetUrl(request.url);

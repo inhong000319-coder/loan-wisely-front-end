@@ -3,6 +3,8 @@ export type LvUsageStatus = "full" | "partial" | "empty";
 
 export type RecommendItemResponse = {
   productId: number;
+  providerId?: number | null;
+  productName?: string | null;
   score?: number | null;
   minRate?: number | null;
   briefReason?: string | null;
@@ -60,6 +62,20 @@ export type RecommendationListResponse = {
   page: number;
   size: number;
   total: number;
+};
+
+export type RecommendEventRequest = {
+  userId?: number;
+  productId: number;
+  eventType: string;
+  occurredAt?: string;
+};
+
+export type RecommendEventResponse = {
+  eventLogId: number;
+  eventType: string;
+  productId: number;
+  occurredAt: string;
 };
 
 

@@ -8,6 +8,7 @@ type ProductGridSectionProps = {
   fallbackTags: string[];
   showAll: boolean;
   onShowAll: () => void;
+  onDetailClick?: (productId: string) => void;
 };
 
 const splitReasons = (reason: string): string[] =>
@@ -22,6 +23,7 @@ const ProductGridSection = ({
   fallbackTags,
   showAll,
   onShowAll,
+  onDetailClick,
 }: ProductGridSectionProps) => {
   const visibleProducts = showAll ? products : products.slice(0, 3);
 
@@ -35,6 +37,7 @@ const ProductGridSection = ({
               key={product.id}
               {...product}
               tags={tags.length > 0 ? tags : fallbackTags}
+              onDetailClick={onDetailClick}
             />
           );
         })}
