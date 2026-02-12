@@ -9,7 +9,6 @@ import ActionSection from "@/components/recommend/sections/ActionSection";
 import ProductGridSection from "@/components/recommend/sections/ProductGridSection";
 import RecommendHeroSection from "@/components/recommend/sections/RecommendHeroSection";
 import RecommendationListSection from "@/components/recommend/sections/RecommendationListSection";
-import RiskSection from "@/components/recommend/sections/RiskSection";
 import SimulationSection from "@/components/recommend/sections/SimulationSection";
 import SummarySection from "@/components/recommend/sections/SummarySection";
 
@@ -55,7 +54,6 @@ const RecommendResultPage = () => {
     levelStatus: "empty",
   };
   const reasons = explainData?.reasons ?? [];
-  const riskNotes = explainData?.riskNotes ?? [];
 
   const products = data?.products ?? [
     {
@@ -116,11 +114,20 @@ const RecommendResultPage = () => {
     riskWarning: "고위험 조건 경고 및 승인 보장 아님 고지가 표시됩니다.",
   };
   const purposeMismatchMessage = "대출 목적이 정책상 허용되지 않습니다.";
-  const eligibleProducts = products.filter(
-    (product) => !product.reason?.includes(purposeMismatchMessage),
-  );
-  const excludedProducts = products.filter((product) =>
-    product.reason?.includes(purposeMismatchMessage),
+  const normalizeReason = (value?: string | null): string => {
+    if (!value) return "";
+    return value
+      .replace(/[\u200B-\u200D\uFEFF]/g, "")
+      .replace(/\s+/g, "")
+      .trim();
+  };
+  const normalizedPurposeMismatch = normalizeReason(purposeMismatchMessage);
+  const hasPurposeMismatch = (reason?: string | null): boolean =>
+    normalizeReason(reason).includes(normalizedPurposeMismatch);
+  const eligibleProducts = products.filter((product) => !hasPurposeMismatch(product.reason));
+  const excludedProducts = products.filter((product) => hasPurposeMismatch(product.reason));
+  const eligibleFallbackTags = reasons.filter(
+    (reason) => reason !== purposeMismatchMessage,
   );
 
   return (
@@ -151,7 +158,7 @@ const RecommendResultPage = () => {
             <h3 className="text-lg font-semibold text-stone-900">추천 상품</h3>
             <ProductGridSection
               products={eligibleProducts}
-              fallbackTags={reasons}
+              fallbackTags={eligibleFallbackTags}
               showAll={showAllProducts}
               onShowAll={() => setShowAllProducts(true)}
             />
@@ -170,8 +177,6 @@ const RecommendResultPage = () => {
               />
             </div>
           )}
-
-          <RiskSection riskNotes={riskNotes} fallbackNote={detail.riskWarning} />
 
           <ActionSection />
         </section>
