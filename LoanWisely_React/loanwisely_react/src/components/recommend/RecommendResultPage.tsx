@@ -10,7 +10,6 @@ import ProductGridSection from "@/components/recommend/sections/ProductGridSecti
 import RecommendHeroSection from "@/components/recommend/sections/RecommendHeroSection";
 import RecommendationListSection from "@/components/recommend/sections/RecommendationListSection";
 import SimulationSection from "@/components/recommend/sections/SimulationSection";
-import SummarySection from "@/components/recommend/sections/SummarySection";
 
 import { getAccessToken } from "@/infra/auth";
 import { useRecommendResult } from "@/hooks/useRecommendResult";
@@ -144,12 +143,6 @@ const RecommendResultPage = () => {
             size={listData?.size ?? listSize}
             total={listData?.total ?? 0}
             onPageChange={setListPage}
-          />
-
-          <SummarySection
-            summaryItems={splitSummary(explain.summary)}
-            levelUsed={explain.levelUsed}
-            levelStatus={explain.levelStatus}
           />
 
           <SimulationSection monthlyPaymentExample={detail.monthlyPaymentExample} />

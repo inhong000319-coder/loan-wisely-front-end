@@ -61,24 +61,24 @@ const AppHeader = ({ variant = "default" }: AppHeaderProps) => {
     <header
       className={
         isCompact
-          ? "rounded-[24px] border border-stone-200 bg-white/90 px-4 py-4 shadow-soft-lg sm:rounded-[28px] sm:px-8 sm:py-5"
-          : "flex flex-col items-start justify-between gap-4 rounded-[24px] border border-stone-200 bg-white/90 px-4 py-4 shadow-soft-lg sm:flex-row sm:items-center sm:gap-6 sm:rounded-[28px] sm:px-8 sm:py-5"
+          ? "rounded-[22px] border border-[var(--lw-border)] bg-white/90 px-4 py-4 shadow-[var(--lw-shadow)] sm:px-7 sm:py-5"
+          : "flex flex-col items-start justify-between gap-4 rounded-[22px] border border-[var(--lw-border)] bg-white/90 px-4 py-4 shadow-[var(--lw-shadow)] sm:flex-row sm:items-center sm:gap-6 sm:px-7 sm:py-5"
       }
     >
-      <a
-        href="/"
-        className="flex items-center gap-4"
-        aria-label="LoanWisely"
-      >
-        <div className="grid h-10 w-10 place-items-center rounded-2xl bg-amber-200 text-stone-900 shadow-sm sm:h-12 sm:w-12">
-          LW
+      <a href="/" className="flex items-center gap-4" aria-label="LoanWisely">
+        <div className="grid h-10 w-10 place-items-center rounded-2xl bg-[#f4ecdf] shadow-sm sm:h-12 sm:w-12">
+          <img
+            src="/loanie_누끼.png"
+            alt="Loanie"
+            className="h-7 w-7 object-contain sm:h-9 sm:w-9"
+          />
         </div>
         <div>
           <div className="text-base font-semibold tracking-wide text-stone-900 sm:text-lg">
             LOAN WISELY
           </div>
           <div className="text-xs text-stone-500 sm:text-sm">
-            맞춤 금융상품 추천 서비스
+            Personalized Loan Recommendation Service
           </div>
         </div>
       </a>
@@ -89,7 +89,7 @@ const AppHeader = ({ variant = "default" }: AppHeaderProps) => {
               <li key={item.label}>
                 <a
                   href={item.href}
-                  className="whitespace-nowrap rounded-full border border-stone-200 bg-white/90 px-3 py-1.5 transition hover:border-stone-300 hover:text-stone-900 sm:px-4 sm:py-2"
+                  className="whitespace-nowrap rounded-full border border-[var(--lw-border)] bg-white px-3 py-1.5 text-[var(--lw-ink)] transition hover:border-stone-300 hover:bg-stone-50 sm:px-4 sm:py-2"
                 >
                   {item.label}
                 </a>
@@ -100,14 +100,14 @@ const AppHeader = ({ variant = "default" }: AppHeaderProps) => {
                 <button
                   type="button"
                   onClick={handleLogout}
-                  className="whitespace-nowrap rounded-full border border-stone-200 bg-white/90 px-3 py-1.5 transition hover:border-stone-300 hover:text-stone-900 sm:px-4 sm:py-2"
+                  className="whitespace-nowrap rounded-full border border-[var(--lw-border)] bg-white px-3 py-1.5 text-[var(--lw-ink)] transition hover:border-stone-300 hover:bg-stone-50 sm:px-4 sm:py-2"
                 >
                   로그아웃
                 </button>
               ) : (
                 <a
                   href={loginHref}
-                  className="whitespace-nowrap rounded-full border border-stone-200 bg-white/90 px-3 py-1.5 transition hover:border-stone-300 hover:text-stone-900 sm:px-4 sm:py-2"
+                  className="whitespace-nowrap rounded-full border border-[var(--lw-border)] bg-white px-3 py-1.5 text-[var(--lw-ink)] transition hover:border-stone-300 hover:bg-stone-50 sm:px-4 sm:py-2"
                 >
                   로그인
                 </a>
@@ -117,7 +117,7 @@ const AppHeader = ({ variant = "default" }: AppHeaderProps) => {
               <li>
                 <a
                   href="/signup"
-                  className="whitespace-nowrap rounded-full border border-stone-200 bg-white/90 px-3 py-1.5 transition hover:border-stone-300 hover:text-stone-900 sm:px-4 sm:py-2"
+                  className="whitespace-nowrap rounded-full border border-[var(--lw-border)] bg-[#f4ecdf] px-3 py-1.5 text-[var(--lw-ink)] transition hover:border-stone-300 hover:bg-[#efe5d7] sm:px-4 sm:py-2"
                 >
                   회원가입
                 </a>
