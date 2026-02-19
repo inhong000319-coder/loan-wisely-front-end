@@ -2,7 +2,7 @@
 export type FormValues = {
   age: number | null;
   annualIncome: number | null;
-  gender: "male" | "female" | "";
+  gender: "M" | "F" | "";
   employmentType: string;
   residenceType: string;
   loanPurpose: string;

@@ -83,7 +83,11 @@ const UserInputPage = () => {
 
     try {
       const recommendResponse = await recommendFlow.mutateAsync(payload);
-      router.push(`/recommend?id=${recommendResponse.recommendationId}`);
+      if (recommendResponse.resultId !== null && recommendResponse.resultId !== undefined) {
+        router.push(`/recommend?id=${recommendResponse.resultId}`);
+        return;
+      }
+      router.push("/recommend");
     } catch {
       router.push("/recommend");
     }

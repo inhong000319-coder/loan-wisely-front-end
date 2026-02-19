@@ -36,15 +36,13 @@ export type RecommendExplainResponse = {
 };
 
 export type RecommendExecuteRequest = {
-  versionIds: {
-    profileVersionId?: string;
-    lv2VersionId?: string;
-    lv3VersionId?: string;
-  };
-  options?: Record<string, unknown>;
+  userId?: number;
+  requestedInputLevel?: number;
+  requestTraceId?: string;
 };
 
 export type RecommendExecuteResponse = {
+  resultId?: number | null;
   state: "READY" | "NOT_READY" | "BLOCKED";
   inputLevel?: number | null;
   items: RecommendItemResponse[];
@@ -77,5 +75,3 @@ export type RecommendEventResponse = {
   productId: number;
   occurredAt: string;
 };
-
-

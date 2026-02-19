@@ -9,13 +9,13 @@ import { useUserRegister } from "@/hooks/useUserRegister";
 const SignupPage = () => {
   const router = useRouter();
   const registerMutation = useUserRegister();
-  const [username, setUsername] = useState("");
+  const [loginId, setLoginId] = useState("");
   const [password, setPassword] = useState("");
 
   const onSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     try {
-      await registerMutation.mutateAsync({ username, password });
+      await registerMutation.mutateAsync({ loginId, password });
       router.push("/login");
     } catch {
       // handled by UI
@@ -30,21 +30,19 @@ const SignupPage = () => {
         </div>
 
         <section className="mx-auto w-full max-w-3xl rounded-[28px] border border-stone-200 bg-white/90 p-6 shadow-soft-lg sm:p-8">
-          <h1 className="text-xl font-semibold text-stone-900 sm:text-2xl">
-            사용자 회원가입
-          </h1>
+          <h1 className="text-xl font-semibold text-stone-900 sm:text-2xl">회원가입</h1>
           <p className="mt-2 text-sm text-stone-600">
-            가입 후 로그인해서 추천을 진행할 수 있습니다.
+            가입 후 로그인하면 추천을 이용할 수 있습니다.
           </p>
 
           <form onSubmit={onSubmit} className="mt-6 space-y-4">
             <div className="space-y-2">
-              <label className="text-sm font-medium text-stone-700">아이디</label>
+              <label className="text-sm font-medium text-stone-700">로그인 ID</label>
               <input
                 className="w-full rounded-2xl border border-stone-200 bg-white px-4 py-3 text-sm text-stone-900 focus:border-stone-400 focus:outline-none"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                placeholder="user1"
+                value={loginId}
+                onChange={(e) => setLoginId(e.target.value)}
+                placeholder="user01"
                 required
               />
             </div>
@@ -56,7 +54,7 @@ const SignupPage = () => {
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="pass1234*"
+                placeholder="password1234"
                 required
               />
             </div>
@@ -70,7 +68,7 @@ const SignupPage = () => {
               className="w-full rounded-2xl bg-stone-900 px-4 py-3 text-sm font-semibold text-white transition hover:bg-stone-800"
               disabled={registerMutation.isPending}
             >
-              {registerMutation.isPending ? "가입 중.." : "회원가입"}
+              {registerMutation.isPending ? "가입 중..." : "회원가입"}
             </button>
           </form>
         </section>

@@ -1,21 +1,24 @@
 export type UserLoginRequest = {
-  username: string;
+  loginId: string;
   password: string;
 };
 
 export type UserLoginResponse = {
   userId: number;
-  username: string;
+  roleCode?: string;
+  tokenType?: string;
   accessToken: string;
-  expiresInSeconds: number;
+  expiresIn?: number;
 };
 
 export type UserRegisterRequest = {
-  username: string;
+  loginId: string;
   password: string;
+  roleCode?: string;
 };
 
 export type UserRegisterResponse = {
   userId: number;
-  username: string;
+  loginId: string;
+  roleCode?: string;
 };

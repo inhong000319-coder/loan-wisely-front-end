@@ -8,7 +8,7 @@ import type {
 } from "@/types/auth";
 
 export const verifyUser = async (): Promise<void> => {
-  await fetcher("/api/auth/verify", { method: "POST" });
+  await fetcher("/api/users/me/recommendations?page=0&size=1", { method: "GET" });
 };
 
 export const loginUser = async (
@@ -28,7 +28,7 @@ export const registerUser = async (
   payload: UserRegisterRequest,
 ): Promise<UserRegisterResponse> => {
   const data = await fetcher<ApiResponse<UserRegisterResponse>>(
-    "/api/auth/register",
+    "/api/auth/signup",
     {
       method: "POST",
       headers: {

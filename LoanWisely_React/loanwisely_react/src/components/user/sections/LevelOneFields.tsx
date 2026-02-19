@@ -31,11 +31,11 @@ const LevelOneFields = ({ register }: LevelOneFieldsProps) => (
       성별
       <div className="flex gap-6">
         <label className="flex items-center gap-2">
-          <input type="radio" value="male" {...register("gender")} />
+          <input type="radio" value="M" {...register("gender")} />
           남자
         </label>
         <label className="flex items-center gap-2">
-          <input type="radio" value="female" {...register("gender")} />
+          <input type="radio" value="F" {...register("gender")} />
           여자
         </label>
       </div>

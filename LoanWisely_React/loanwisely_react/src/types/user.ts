@@ -1,13 +1,23 @@
-﻿// User, profile, and credit types.
-export type UserProfileResponse = {
-  profilePayload: UserProfilePayload;
-  versionId: string;
+﻿export type UserProfileResponse = {
+  userId: number;
+  inputLevel: number | null;
+  age: number | null;
+  incomeYear: number | null;
+  gender: "M" | "F" | string | null;
+  employmentType: string | null;
+  residenceType: string | null;
+  debtTotal: number | null;
+  existingLoanCount: number | null;
+  loanPurpose: string | null;
+  inputStateCode: string | null;
+  isActive: "Y" | "N" | string | null;
+  createdAt: string | null;
 };
 
 export type UserInputLv1 = {
   age: number | null;
   annualIncome: number | null;
-  gender: "male" | "female" | null;
+  gender: "M" | "F" | null;
 };
 
 export type UserInputLv2 = {
@@ -46,14 +56,14 @@ export type UserConsentResponse = {
 export type UserCreditLv1Request = {
   age: number | null;
   incomeYear: number | null;
-  gender: "male" | "female" | null;
+  gender: "M" | "F" | null;
 };
 
 export type UserCreditLv1Response = {
   userId: number;
   age: number;
   incomeYear: number;
-  gender: "male" | "female" | string;
+  gender: "M" | "F" | string;
   createdAt: string;
 };
 
@@ -63,7 +73,10 @@ export type UserCreditLv2Request = {
 };
 
 export type UserCreditLv2Response = {
-  lv2VersionId: string;
+  userId: number;
+  employmentType: string | null;
+  residenceType: string | null;
+  createdAt: string;
 };
 
 export type UserCreditLv3Request = {
@@ -73,20 +86,24 @@ export type UserCreditLv3Request = {
 };
 
 export type UserCreditLv3Response = {
-  lv3VersionId: string;
+  userId: number;
+  loanPurpose: string | null;
+  totalDebt: number | null;
+  existingLoanCount: number | null;
+  createdAt: string;
 };
 
 export type UserProfilePayload = {
   age: number | null;
   annualIncome: number | null;
-  gender: "male" | "female" | null;
+  gender: "M" | "F" | null;
 };
 
 export type UserProfileSaveRequest = {
   inputLevel: number;
   age: number | null;
   incomeYear: number | null;
-  gender: "male" | "female" | null;
+  gender: "M" | "F" | null;
   employmentType?: string | null;
   residenceType?: string | null;
   debtTotal?: number | null;
@@ -94,8 +111,4 @@ export type UserProfileSaveRequest = {
   loanPurpose?: string | null;
 };
 
-export type UserProfileSaveResponse = {
-  profileVersionId: string;
-};
-
-
+export type UserProfileSaveResponse = UserProfileResponse;

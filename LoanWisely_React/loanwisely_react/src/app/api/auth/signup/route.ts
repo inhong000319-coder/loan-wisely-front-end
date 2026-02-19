@@ -1,21 +1,19 @@
-﻿import { NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 
 import { env } from "@/infra/env";
 import { FetchError, fetcher } from "@/infra/fetcher";
 
-const buildTargetUrl = (): string => {
+const buildTargetUrl = (requestUrl: string): string => {
+  const incoming = new URL(requestUrl);
   const base = env.backendUrl.replace(/\/+$/, "");
-  return `${base}/api/users/me/recommendations?page=0&size=1`;
+  return `${base}${incoming.pathname}${incoming.search}`;
 };
 
 const forwardHeaders = (request: Request): HeadersInit => {
   const headers = new Headers();
-  const authorization = request.headers.get("authorization");
-  if (authorization) {
-    headers.set("authorization", authorization);
-  }
-  if (env.backendApiKey) {
-    headers.set("X-API-KEY", env.backendApiKey);
+  const contentType = request.headers.get("content-type");
+  if (contentType) {
+    headers.set("content-type", contentType);
   }
   return headers;
 };
@@ -30,18 +28,23 @@ const respond = (body: unknown, status: number): NextResponse => {
   return NextResponse.json(body, { status });
 };
 
-export const GET = async (request: Request): Promise<NextResponse> => {
+const mockResponse = (): NextResponse =>
+  NextResponse.json({ data: { userId: 0, loginId: "demo", roleCode: "USER" } });
+
+export const POST = async (request: Request): Promise<NextResponse> => {
   if (env.backendUrl === "") {
-    return NextResponse.json({ ok: true });
+    return mockResponse();
   }
 
-  const targetUrl = buildTargetUrl();
+  const targetUrl = buildTargetUrl(request.url);
   const headers = forwardHeaders(request);
+  const body = await request.text();
 
   try {
     const data = await fetcher<unknown>(targetUrl, {
-      method: "GET",
+      method: "POST",
       headers,
+      body,
     });
     return respond(data, 200);
   } catch (error) {

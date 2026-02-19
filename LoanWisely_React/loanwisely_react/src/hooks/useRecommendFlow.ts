@@ -76,7 +76,7 @@ export const useRecommendFlow = () =>
       const hasConsent = payload.lv3.consent === true;
       const inputLevel = getInputLevel(hasLv2, hasLv3);
 
-      const profileResponse = await saveUserProfile({
+      await saveUserProfile({
         inputLevel,
         age: payload.lv1.age,
         incomeYear: payload.lv1.annualIncome,
@@ -87,9 +87,6 @@ export const useRecommendFlow = () =>
         existingLoanCount: hasLv3 ? payload.lv3.existingLoanCount : null,
         loanPurpose: hasLv3 ? payload.lv3.loanPurpose : null,
       });
-
-      let lv2VersionId: string | undefined;
-      let lv3VersionId: string | undefined;
 
       await saveUserCreditLv1({
         age: payload.lv1.age,
@@ -106,30 +103,22 @@ export const useRecommendFlow = () =>
       }
 
       if (hasLv2) {
-        const lv2Response = await saveUserCreditLv2({
+        await saveUserCreditLv2({
           employmentType: payload.lv2.employmentType,
           residenceType: payload.lv2.residenceType,
         });
-        lv2VersionId = lv2Response.lv2VersionId;
       }
 
       if (hasLv3) {
-        const lv3Response = await saveUserCreditLv3({
+        await saveUserCreditLv3({
           loanPurpose: payload.lv3.loanPurpose,
           totalDebt: payload.lv3.totalDebtAmount,
           existingLoanCount: payload.lv3.existingLoanCount,
         });
-        lv3VersionId = lv3Response.lv3VersionId;
       }
 
       return executeRecommendation({
-        versionIds: {
-          profileVersionId: profileResponse.profileVersionId,
-          lv2VersionId,
-          lv3VersionId,
-        },
+        requestedInputLevel: inputLevel,
       });
     },
   });
-
-

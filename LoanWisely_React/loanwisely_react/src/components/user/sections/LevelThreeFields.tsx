@@ -27,7 +27,7 @@ const LevelThreeFields = ({ register }: LevelThreeFieldsProps) => (
         type="number"
         placeholder="총 부채 금액을 입력하세요"
         className="rounded-2xl border border-stone-300 px-4 py-2"
-        {...register("totalDebt", { valueAsNumber: true })}
+        {...register("totalDebtAmount", { valueAsNumber: true })}
       />
     </label>
     <label className="grid gap-2 text-sm text-stone-700">

@@ -7,7 +7,7 @@ import { FetchError, fetcher } from "@/infra/fetcher";
 const buildTargetUrl = (requestUrl: string): string => {
   const incoming = new URL(requestUrl);
   const base = env.backendUrl.replace(/\/+$/, "");
-  return `${base}${incoming.pathname}${incoming.search}`;
+  return `${base}/api/auth/signup${incoming.search}`;
 };
 
 const forwardHeaders = (request: Request): HeadersInit => {
@@ -30,7 +30,7 @@ const respond = (body: unknown, status: number): NextResponse => {
 };
 
 const mockResponse = (): NextResponse =>
-  NextResponse.json({ userId: 0, username: "demo" });
+  NextResponse.json({ data: { userId: 0, loginId: "demo", roleCode: "USER" } });
 
 export const POST = async (request: Request): Promise<NextResponse> => {
   if (env.backendUrl === "") {

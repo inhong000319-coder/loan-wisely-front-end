@@ -24,9 +24,10 @@ export const POST = async (request: Request): Promise<NextResponse> => {
     return NextResponse.json({
       data: {
         userId: 1,
-        username: "demo",
+        roleCode: "USER",
+        tokenType: "Bearer",
         accessToken: "demo-token",
-        expiresInSeconds: 3600,
+        expiresIn: 3600,
       },
     });
   }

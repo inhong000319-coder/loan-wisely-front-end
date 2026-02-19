@@ -8,7 +8,7 @@ export const useUserLogin = () =>
   useMutation<UserLoginResponse, Error, UserLoginRequest>({
     mutationFn: async (payload) => {
       const data = await loginUser(payload);
-      setAccessToken(data.accessToken, data.expiresInSeconds);
+      setAccessToken(data.accessToken, data.expiresIn);
       return data;
     },
   });
