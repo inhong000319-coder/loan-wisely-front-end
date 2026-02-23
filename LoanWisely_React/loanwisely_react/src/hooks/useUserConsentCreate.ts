@@ -1,4 +1,4 @@
-﻿// Hook to create consent.
+// Hook to create consent.
 import { useMutation } from "@tanstack/react-query";
 
 import { createUserConsent } from "@/api/userApi";

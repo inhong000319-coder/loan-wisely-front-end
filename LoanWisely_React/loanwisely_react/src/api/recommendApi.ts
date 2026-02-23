@@ -1,4 +1,4 @@
-﻿// 추천 관련 API 호출 함수들을 모아둔 파일
+// 추천 관련 API 호출 함수들을 모아둔 파일
 import { fetcher } from "@/infra/fetcher";
 
 import type {

@@ -1,4 +1,4 @@
-﻿// 추천 목록(내 추천) 섹션
+// 추천 목록(내 추천) 섹션
 type RecommendationListItem = {
   id: string;
   title: string;

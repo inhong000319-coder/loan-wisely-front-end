@@ -1,4 +1,4 @@
-﻿// Hook to execute recommendation.
+// Hook to execute recommendation.
 import { useMutation } from "@tanstack/react-query";
 
 import { executeRecommendation } from "@/api/recommendApi";

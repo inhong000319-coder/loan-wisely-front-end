@@ -1,4 +1,4 @@
-﻿// 메인(홈) 화면 UI 구성 컴포넌트
+// 메인(홈) 화면 UI 구성 컴포넌트
 import AppHeader from "@/components/common/AppHeader";
 import HomeFooter from "@/components/home/sections/HomeFooter";
 import HomeHeroSection from "@/components/home/sections/HomeHeroSection";

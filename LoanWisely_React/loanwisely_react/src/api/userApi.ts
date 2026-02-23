@@ -1,4 +1,4 @@
-﻿// 사용자 프로필, 동의서, 신용 정보 관련 API 호출 함수들을 모아둔 파일
+// 사용자 프로필, 동의서, 신용 정보 관련 API 호출 함수들을 모아둔 파일
 import { fetcher } from "@/infra/fetcher";
 
 import type {

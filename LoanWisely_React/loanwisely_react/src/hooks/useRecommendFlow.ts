@@ -1,4 +1,4 @@
-﻿// Hook to orchestrate save, consent, and recommendation flow.
+// Hook to orchestrate save, consent, and recommendation flow.
 import { useMutation } from "@tanstack/react-query";
 
 import {
@@ -45,7 +45,7 @@ const hasLv3Input = (payload: UserInputLv3): boolean =>
   hasValue(payload.totalDebtAmount ?? null) ||
   hasValue(payload.existingLoanCount ?? null);
 
-const getInputLevel = (hasLv2: boolean, hasLv3: boolean): number => {
+const getInputLevel = (hasLv2: boolean, hasLv3: boolean): UserConsentLevel => {
   if (hasLv3) {
     return 3;
   }
@@ -54,6 +54,11 @@ const getInputLevel = (hasLv2: boolean, hasLv3: boolean): number => {
   }
   return 1;
 };
+
+const hasLv1Input = (payload: UserInputPayload["lv1"]): boolean =>
+  hasValue(payload.age ?? null) &&
+  hasValue(payload.annualIncome ?? null) &&
+  hasValue(payload.gender ?? null);
 
 const buildPayload = (values: UserInputPayload): UserInputPayload => ({
   lv1: {
@@ -77,6 +82,10 @@ export const useRecommendFlow = () =>
   useMutation<RecommendExecuteResponse, Error, UserInputPayload>({
     mutationFn: async (formPayload) => {
       const payload = buildPayload(formPayload);
+
+      if (!hasLv1Input(payload.lv1)) {
+        throw new Error("LV1_REQUIRED");
+      }
 
       const hasLv2 = hasLv2Input(payload.lv2);
       const hasLv3 = hasLv3Input(payload.lv3);
@@ -104,8 +113,8 @@ export const useRecommendFlow = () =>
         gender: payload.lv1.gender,
       });
 
-      if (hasConsent && (hasLv2 || hasLv3)) {
-        const consentLevel: UserConsentLevel = hasLv2 ? 2 : 3;
+      if (hasConsent) {
+        const consentLevel: UserConsentLevel = inputLevel;
         await createUserConsent({
           consentLevel,
           consentGiven: true,
@@ -113,20 +122,28 @@ export const useRecommendFlow = () =>
       }
 
       if (hasLv2) {
-        const lv2Response = await saveUserCreditLv2({
-          employmentType: payload.lv2.employmentType,
-          residenceType: payload.lv2.residenceType,
-        });
-        lv2VersionId = lv2Response.lv2VersionId;
+        try {
+          const lv2Response = await saveUserCreditLv2({
+            employmentType: payload.lv2.employmentType,
+            residenceType: payload.lv2.residenceType,
+          });
+          lv2VersionId = lv2Response.lv2VersionId;
+        } catch {
+          lv2VersionId = undefined;
+        }
       }
 
       if (hasLv3) {
-        const lv3Response = await saveUserCreditLv3({
-          loanPurpose: payload.lv3.loanPurpose,
-          totalDebt: payload.lv3.totalDebtAmount,
-          existingLoanCount: payload.lv3.existingLoanCount,
-        });
-        lv3VersionId = lv3Response.lv3VersionId;
+        try {
+          const lv3Response = await saveUserCreditLv3({
+            loanPurpose: payload.lv3.loanPurpose,
+            totalDebt: payload.lv3.totalDebtAmount,
+            existingLoanCount: payload.lv3.existingLoanCount,
+          });
+          lv3VersionId = lv3Response.lv3VersionId;
+        } catch {
+          lv3VersionId = undefined;
+        }
       }
 
       return executeRecommendation({

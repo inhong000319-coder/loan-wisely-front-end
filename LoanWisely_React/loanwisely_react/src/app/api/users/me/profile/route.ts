@@ -1,4 +1,4 @@
-﻿// 사용자 프로필 조회/저장 요청을 백엔드로 전달하는 BFF 라우트
+// 사용자 프로필 조회/저장 요청을 백엔드로 전달하는 BFF 라우트
 import { NextResponse } from "next/server";
 
 import { env } from "@/infra/env";

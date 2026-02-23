@@ -1,4 +1,4 @@
-﻿// User store placeholder.
+// User store placeholder.
  type UserUiState = {
    selectedUserId: string | null;
  };

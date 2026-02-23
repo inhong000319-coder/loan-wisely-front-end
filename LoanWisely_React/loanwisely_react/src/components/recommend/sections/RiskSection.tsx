@@ -1,4 +1,4 @@
-﻿// 리스크 요인 섹션
+// 리스크 요인 섹션
 type RiskSectionProps = {
   riskNotes: string[];
   fallbackNote: string;

@@ -1,4 +1,4 @@
-﻿// 추천 실행을 위한 BFF 프록시.
+// 추천 실행을 위한 BFF 프록시.
 import { NextResponse } from "next/server";
 
 import { env } from "@/infra/env";

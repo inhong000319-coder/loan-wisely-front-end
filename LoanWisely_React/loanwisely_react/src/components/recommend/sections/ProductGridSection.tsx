@@ -1,4 +1,4 @@
-﻿// 추천 상품 리스트 섹션
+// 추천 상품 리스트 섹션
 import ProductCard, { type ProductCardProps } from "@/components/recommend/parts/ProductCard";
 
 type ProductInput = Omit<ProductCardProps, "tags">;

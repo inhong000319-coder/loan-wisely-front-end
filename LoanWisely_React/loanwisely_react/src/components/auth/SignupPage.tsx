@@ -6,16 +6,32 @@ import { useRouter } from "next/navigation";
 import AppHeader from "@/components/common/AppHeader";
 import { useUserRegister } from "@/hooks/useUserRegister";
 
+const MIN_USERNAME_LENGTH = 6;
+const PASSWORD_RULE = /^(?=.*[a-z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/;
+
 const SignupPage = () => {
   const router = useRouter();
   const registerMutation = useUserRegister();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [validationMessage, setValidationMessage] = useState<string | null>(null);
 
   const onSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
+    const trimmedUsername = username.trim();
+    if (trimmedUsername.length < MIN_USERNAME_LENGTH) {
+      setValidationMessage("아이디는 6자리 이상이어야 합니다.");
+      return;
+    }
+    if (!PASSWORD_RULE.test(password)) {
+      setValidationMessage(
+        "비밀번호는 8자리 이상이며 소문자, 숫자, 특수기호를 포함해야 합니다.",
+      );
+      return;
+    }
+    setValidationMessage(null);
     try {
-      await registerMutation.mutateAsync({ username, password });
+      await registerMutation.mutateAsync({ username: trimmedUsername, password });
       router.push("/login");
     } catch {
       // handled by UI
@@ -43,8 +59,11 @@ const SignupPage = () => {
               <input
                 className="w-full rounded-2xl border border-stone-200 bg-white px-4 py-3 text-sm text-stone-900 focus:border-stone-400 focus:outline-none"
                 value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                placeholder="user1"
+                onChange={(e) => {
+                  setUsername(e.target.value);
+                  if (validationMessage) setValidationMessage(null);
+                }}
+                placeholder="user001"
                 required
               />
             </div>
@@ -55,12 +74,21 @@ const SignupPage = () => {
                 className="w-full rounded-2xl border border-stone-200 bg-white px-4 py-3 text-sm text-stone-900 focus:border-stone-400 focus:outline-none"
                 type="password"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                  if (validationMessage) setValidationMessage(null);
+                }}
                 placeholder="pass1234*"
                 required
               />
+              <p className="text-xs text-stone-500">
+                아이디 6자리 이상 / 비밀번호 8자리 이상(소문자, 숫자, 특수기호 포함)
+              </p>
             </div>
 
+            {validationMessage ? (
+              <p className="text-sm text-rose-600">{validationMessage}</p>
+            ) : null}
             {registerMutation.isError ? (
               <p className="text-sm text-rose-600">회원가입에 실패했습니다.</p>
             ) : null}

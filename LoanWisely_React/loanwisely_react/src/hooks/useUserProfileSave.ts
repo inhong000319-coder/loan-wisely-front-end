@@ -1,4 +1,4 @@
-﻿// Hook to save user profile.
+// Hook to save user profile.
 import { useMutation } from "@tanstack/react-query";
 
 import { saveUserProfile } from "@/api/userApi";

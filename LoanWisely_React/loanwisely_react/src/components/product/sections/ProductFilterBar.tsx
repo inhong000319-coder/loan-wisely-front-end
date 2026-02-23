@@ -1,4 +1,4 @@
-﻿// 상품 목록 필터 바
+// 상품 목록 필터 바
 const ProductFilterBar = () => (
   <div className="flex flex-wrap items-center gap-3 rounded-2xl border border-stone-200 bg-stone-50 px-4 py-3">
     <button

@@ -1,4 +1,4 @@
-﻿// User, profile, and credit types.
+// User, profile, and credit types.
 export type UserProfileResponse = {
   profilePayload: UserProfilePayload;
   versionId: string;
@@ -28,7 +28,7 @@ export type UserInputPayload = {
   lv3: UserInputLv3;
 };
 
-export type UserConsentLevel = 2 | 3;
+export type UserConsentLevel = 1 | 2 | 3;
 
 export type UserConsentRequest = {
   consentLevel: UserConsentLevel;

@@ -1,4 +1,4 @@
-﻿// 추천 결과 요약 섹션
+// 추천 결과 요약 섹션
 type SummarySectionProps = {
   summaryItems: string[];
   levelUsed: string;

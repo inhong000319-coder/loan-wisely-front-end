@@ -3,7 +3,6 @@
 import { useMemo, useState } from "react";
 
 import AppHeader from "@/components/common/AppHeader";
-import ProductFilterBar from "@/components/product/sections/ProductFilterBar";
 import ProductGrid from "@/components/product/sections/ProductGrid";
 import ProductSummarySidebar from "@/components/product/sections/ProductSummarySidebar";
 import ProductFooter from "@/components/product/sections/ProductFooter";
@@ -54,7 +53,6 @@ const ProductPage = () => {
               </p>
             </div>
 
-            <ProductFilterBar />
             {isLoading ? (
               <div className="rounded-2xl border border-stone-200 bg-white px-6 py-10 text-center text-sm text-stone-500">
                 상품 정보를 불러오는 중입니다.

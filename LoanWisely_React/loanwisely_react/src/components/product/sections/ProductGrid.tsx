@@ -1,4 +1,4 @@
-﻿// 상품 리스트 그리드
+// 상품 리스트 그리드
 import ProductCard from "@/components/product/parts/ProductCard";
 import type { LoanProduct } from "@/types/product";
 

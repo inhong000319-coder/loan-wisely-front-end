@@ -1,4 +1,4 @@
-﻿// 추천 결과 페이지 진입점
+// 추천 결과 페이지 진입점
 import { Suspense } from "react";
 
 import RecommendResultPage from "@/components/recommend/RecommendResultPage";

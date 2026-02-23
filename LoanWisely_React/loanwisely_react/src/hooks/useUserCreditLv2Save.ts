@@ -1,4 +1,4 @@
-﻿// Hook to save LV2 credit.
+// Hook to save LV2 credit.
 import { useMutation } from "@tanstack/react-query";
 
 import { saveUserCreditLv2 } from "@/api/userApi";

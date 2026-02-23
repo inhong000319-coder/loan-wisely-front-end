@@ -1,4 +1,4 @@
-﻿// 사용자 입력 폼 값 타입
+// 사용자 입력 폼 값 타입
 export type FormValues = {
   age: number | null;
   annualIncome: number | null;

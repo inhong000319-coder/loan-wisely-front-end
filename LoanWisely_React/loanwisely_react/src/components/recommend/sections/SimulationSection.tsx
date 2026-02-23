@@ -1,4 +1,4 @@
-﻿// 상환 시뮬레이션 섹션
+// 상환 시뮬레이션 섹션
 type SimulationSectionProps = {
   monthlyPaymentExample: string;
 };

@@ -1,4 +1,4 @@
-﻿// Recommendation API types.
+// Recommendation API types.
 export type LvUsageStatus = "full" | "partial" | "empty";
 
 export type RecommendExplain = {

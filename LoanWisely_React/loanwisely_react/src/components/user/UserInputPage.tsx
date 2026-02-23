@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 // User input wizard UI.
 
 import { useEffect, useState } from "react";
@@ -63,6 +63,22 @@ const UserInputPage = () => {
     }
 
     const values = getValues();
+    const hasLv1Required =
+      values.age !== null &&
+      values.age !== undefined &&
+      Number.isFinite(values.age) &&
+      values.annualIncome !== null &&
+      values.annualIncome !== undefined &&
+      Number.isFinite(values.annualIncome) &&
+      values.gender !== "";
+
+    if (!hasLv1Required) {
+      if (typeof window !== "undefined") {
+        window.alert("LV1 정보(나이, 연소득, 성별)를 모두 입력해야 추천을 실행할 수 있습니다.");
+      }
+      return;
+    }
+
     if (!values.consent) {
       if (typeof window !== "undefined") {
         window.alert("금융정보 이용에 동의해야 추천 결과를 확인할 수 있습니다.");
@@ -91,7 +107,9 @@ const UserInputPage = () => {
       const recommendResponse = await recommendFlow.mutateAsync(payload);
       router.push(`/recommend?id=${recommendResponse.recommendationId}`);
     } catch {
-      router.push("/recommend");
+      if (typeof window !== "undefined") {
+        window.alert("추천 실행에 실패했습니다. 입력값을 확인한 뒤 다시 시도해주세요.");
+      }
     }
   };
 

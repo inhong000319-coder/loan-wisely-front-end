@@ -1,4 +1,4 @@
-﻿// 추천 결과 하단 액션 섹션
+// 추천 결과 하단 액션 섹션
 const ActionSection = () => (
   <div className="flex flex-wrap gap-3">
     <a

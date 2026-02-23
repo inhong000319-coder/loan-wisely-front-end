@@ -1,4 +1,4 @@
-﻿// 추천 결과 상단 타이틀 섹션
+// 추천 결과 상단 타이틀 섹션
 type RecommendHeroSectionProps = {
   hasId: boolean;
   isLoading: boolean;
