@@ -6,7 +6,7 @@ import { FetchError, fetcher } from "@/infra/fetcher";
 
 const buildTargetUrl = (): string => {
   const base = env.backendUrl.replace(/\/+$/, "");
-  return `${base}/health`;
+  return `${base}/actuator/health`;
 };
 
 const respond = (body: unknown, status: number): NextResponse => {

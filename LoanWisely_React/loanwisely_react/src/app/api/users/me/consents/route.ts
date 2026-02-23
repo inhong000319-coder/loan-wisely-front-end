@@ -59,4 +59,26 @@ export const POST = async (request: Request): Promise<NextResponse> => {
   }
 };
 
+export const GET = async (request: Request): Promise<NextResponse> => {
+  if (env.backendUrl === "") {
+    return NextResponse.json([]);
+  }
+
+  const targetUrl = buildTargetUrl(request.url);
+  const headers = forwardHeaders(request);
+
+  try {
+    const data = await fetcher<unknown>(targetUrl, {
+      method: "GET",
+      headers,
+    });
+    return respond(data, 200);
+  } catch (error) {
+    if (error instanceof FetchError) {
+      return respond(error.body, error.status);
+    }
+    return respond({ message: "Proxy request failed." }, 502);
+  }
+};
+
 
