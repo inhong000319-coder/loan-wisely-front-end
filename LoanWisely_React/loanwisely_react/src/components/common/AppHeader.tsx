@@ -12,28 +12,23 @@ type AppHeaderProps = {
 };
 
 const AppHeader = ({ variant = "default" }: AppHeaderProps) => {
-  const [hasToken, setHasToken] = useState(() => {
-    const token = getAccessToken();
-    if (!token) return false;
-
-    const expiresAt = getAccessTokenExpiry();
-    if (expiresAt !== null && Date.now() >= expiresAt) {
-      clearAccessToken();
-      return false;
-    }
-    return true;
-  });
+  const [hasToken, setHasToken] = useState(false);
 
   useEffect(() => {
     const token = getAccessToken();
-    if (!token) return;
+    if (!token) {
+      setHasToken(false);
+      return;
+    }
 
     const expiresAt = getAccessTokenExpiry();
     if (expiresAt !== null && Date.now() >= expiresAt) {
       clearAccessToken();
+      setHasToken(false);
       return;
     }
 
+    setHasToken(true);
     verifyUser()
       .then(() => setHasToken(true))
       .catch(() => {
